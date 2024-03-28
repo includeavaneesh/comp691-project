@@ -3,6 +3,8 @@ Student Name: Avaneesh Kanshi
 Student ID: 40273760
 Contact E-mail: avaneeshkanshi@gmail.com, avaneesh.kanshi@live.concordia.ca
 
+Github Repository: https://github.com/includeavaneesh/comp691-project.git
+
 CONTENTS:
 1. About the Project
 2. Functionalities
