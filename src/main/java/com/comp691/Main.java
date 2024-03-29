@@ -23,7 +23,7 @@ public class Main {
         Tests testingSuite = new Tests();
         testingSuite.test0();
         // Category 1: Normal Behavior
-        // testingSuite.test1();
+        testingSuite.test1();
 
         // // Category 2: N = k+1
         // testingSuite.test2();

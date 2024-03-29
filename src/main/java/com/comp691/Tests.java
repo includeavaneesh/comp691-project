@@ -8,19 +8,19 @@ public class Tests {
             // k, N, n are the cache size, global size and request sequence length,
             // respectively.
             int k = 10;
-            int N = 100;
-            int n = 50;
+            int N = 1000;
+            int n = 20000;
 
             // Extra parameters for locality and noise calculations
             double e = 0.4;
             double tau = 0.6;
             int w = 6;
-            double thr = 0.2;
+            double thr = 0.0;
             System.out.println("Test 1: Executing test ...");
             List<Integer> pageSequence = SequenceGenerator.generateRandomSequence(k, N, n, e);
             List<Integer> hSeq = SequenceGenerator.generateH(pageSequence);
             List<Integer> predictedhSeq = SequenceGenerator.addNoise(hSeq, tau, w);
-            System.out.println(pageSequence);
+            // System.out.println(pageSequence);
             BlindOracle testObjectBO = new BlindOracle();
             int boPageFaults = testObjectBO.blindOracle(k, pageSequence, predictedhSeq);
             LeastRecentlyUsed testObjectLRU = new LeastRecentlyUsed();
