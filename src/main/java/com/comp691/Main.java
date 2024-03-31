@@ -19,23 +19,40 @@ public class Main {
 
     public static void main(String[] args) {
 
+        System.out.println("Testing Suite for Low Threshold values:\n\n");
         // Testing suite
-        Tests testingSuite = new Tests();
-        testingSuite.test0();
+        TestsLowThreshold testingSuiteLowThresh = new TestsLowThreshold();
         // Category 1: Normal Behavior
-        testingSuite.test1();
+        testingSuiteLowThresh.test1();
 
-        // // Category 2: N = k+1
-        // testingSuite.test2();
-        // testingSuite.test3();
-        // testingSuite.test4();
-        // testingSuite.test5();
+        // Category 2: N = k+1
+        testingSuiteLowThresh.test2();
+        testingSuiteLowThresh.test3();
+        testingSuiteLowThresh.test4();
+        testingSuiteLowThresh.test5();
 
-        // // Category 3: N >> k
-        // testingSuite.test6();
-        // testingSuite.test7();
-        // testingSuite.test8();
-        // testingSuite.test9();
+        // Category 3: N >> k
+        testingSuiteLowThresh.test6();
+        testingSuiteLowThresh.test7();
+        testingSuiteLowThresh.test8();
+        testingSuiteLowThresh.test9();
+
+        System.out.println("\nTesting Suite for High Threshold values:\n\n");
+        TestsHighThreshold testingSuiteHighThresh = new TestsHighThreshold();
+        // Category 1: Normal Behavior
+        testingSuiteHighThresh.test1();
+
+        // Category 2: N = k+1
+        testingSuiteHighThresh.test2();
+        testingSuiteHighThresh.test3();
+        testingSuiteHighThresh.test4();
+        testingSuiteHighThresh.test5();
+
+        // Category 3: N >> k
+        testingSuiteHighThresh.test6();
+        testingSuiteHighThresh.test7();
+        testingSuiteHighThresh.test8();
+        testingSuiteHighThresh.test9();
 
     }
 }
