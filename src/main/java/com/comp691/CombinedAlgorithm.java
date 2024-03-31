@@ -31,19 +31,27 @@ enum CURRENT_ALGORITHM {
 public class CombinedAlgorithm {
 
     /**
+     * This function is the implementation for Combined Algorithm. It takes in the
+     * cache size, input request sequence, predictive locality sequence and a
+     * threshold parameter. This algorithm intuitively runs Blind Oracle and Least
+     * Recently Used algorithm in parallel. For the first initial k requests, it
+     * purely runs LRU algorithm. Then for the page request i > k, it switches to
+     * Blind Oracle or LRU, to whichever one has incurred the least amount of page
+     * faults, determined by the threshold parameter.
      * 
-     * @param k
-     * @param pageRequestSequence
-     * @param predictedHSeq
-     * @param thr
-     * @return
+     * 
+     * @param k                   Cache Size
+     * @param pageRequestSequence Sequence of page requests made
+     * @param predictedHSeq       Sequence of predicted h value
+     * @param thr                 Threshold Value
+     * @return Page Faults incurred by Combined algorithm
      */
     public int combinedAlg(int k, List<Integer> pageRequestSequence, List<Integer> predictedHSeq, double thr) {
         // LRU Page faults
-        int f1 = 0;
+        int LRU_pageFaults = 0;
 
         // Blind Oracle Page faults
-        int f2 = 0;
+        int BO_pageFaults = 0;
 
         // Combined Algo page faults
         int r_pageFault = 0;
@@ -65,10 +73,10 @@ public class CombinedAlgorithm {
         CURRENT_ALGORITHM ALG = CURRENT_ALGORITHM.LEAST_RECENTLY_USED;
 
         for (int index = 0; index < n; index++) {
-            // System.out.println("f1:" + f1 + " f2:" + f2);
 
-            // Thought prcoess after discussion with denis
-            // First process CA, then calculate LRU and BO
+            // According to clarification, first Combined Algorithm is executed with set
+            // algorithm, then makes the switch depending on the page faults incurred so far
+            // by LRU and Blind Oracle
 
             // So, for the purpose of this algorithm, for the first k requests, CA maintains
             // LRU implementation
@@ -83,20 +91,20 @@ public class CombinedAlgorithm {
                 r_pageFault += 1;
 
                 // LRU also puts page into its cache
-                f1 += 1;
+                LRU_pageFaults += 1;
                 // Updates the most recently requested page
                 LRU_cache.add(requestedPage);
                 LRU_recentPageRequestMemory.addFirst(requestedPage);
 
                 // BO also puts page into its cache
-                f2 += 1;
+                BO_pageFaults += 1;
                 BO_cache.put(requestedPage, predictedHValue);
 
             }
 
             // For the requests i>=k+1
             else {
-                // we need to update CA, F1 AND F2
+                // we need to update CA, LRU page fault AND Blind Oracle page fault
 
                 // IF CA IS LRU
                 if (ALG == CURRENT_ALGORITHM.LEAST_RECENTLY_USED) {
@@ -114,14 +122,13 @@ public class CombinedAlgorithm {
                     CombinedALG_cache = new HashSet<>(BO_cache.keySet());
                 }
 
-                // compute f1 and f2
-                // Compute F1
+                // compute LRU faults and BO faults
+
                 // Least Recently Used Algorithm Implementation
                 // Case: Page fault, CACHE MISS
-
                 if (!LRU_cache.contains(requestedPage)) {
                     // The cache does not contain requested page, then we increment cache miss by 1
-                    f1 += 1;
+                    LRU_pageFaults += 1;
 
                     // If the cache is full, we decide the least recently used page should be
                     // evicted
@@ -143,7 +150,7 @@ public class CombinedAlgorithm {
                     LRU_recentPageRequestMemory.addFirst(requestedPage);
                 }
 
-                // Compute F2
+                // Compute BO page faults
                 if (BO_cache.containsKey(requestedPage)) {
                     BO_cache.put(requestedPage, predictedHValue);
                 }
@@ -152,7 +159,7 @@ public class CombinedAlgorithm {
                 else {
 
                     // Increment overall page fault by 1
-                    f2 += 1;
+                    BO_pageFaults += 1;
 
                     // Subcase 1: If the cache has space for another page, then no need to evict a
                     // page
@@ -187,16 +194,14 @@ public class CombinedAlgorithm {
                 }
 
                 // Case: f1 > (1+thr)*f2, ALG switches from LRU to Blind Oracle
-                if ((double) (f1) > (double) ((1 + thr) * f2) && ALG == CURRENT_ALGORITHM.LEAST_RECENTLY_USED) {
-                    System.out.println("Switching to BO");
-                    System.out.println("f1:" + f1 + " f2:" + f2);
+                if ((double) (LRU_pageFaults) > (double) ((1 + thr) * BO_pageFaults)
+                        && ALG == CURRENT_ALGORITHM.LEAST_RECENTLY_USED) {
                     ALG = CURRENT_ALGORITHM.BLIND_ORACLE;
                 }
 
                 // Case: f2 > (1+thr)*f1, ALG switches from Blind Oracle to LRU
-                else if ((double) (f2) > (double) ((1 + thr) * f1) && ALG == CURRENT_ALGORITHM.BLIND_ORACLE) {
-                    System.out.println("Switching to LRU");
-                    System.out.println("f1:" + f1 + " f2:" + f2);
+                else if ((double) (BO_pageFaults) > (double) ((1 + thr) * LRU_pageFaults)
+                        && ALG == CURRENT_ALGORITHM.BLIND_ORACLE) {
                     ALG = CURRENT_ALGORITHM.LEAST_RECENTLY_USED;
                 }
 
