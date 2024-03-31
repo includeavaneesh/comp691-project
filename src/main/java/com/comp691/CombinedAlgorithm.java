@@ -39,6 +39,7 @@ public class CombinedAlgorithm {
      * Blind Oracle or LRU, to whichever one has incurred the least amount of page
      * faults, determined by the threshold parameter.
      * 
+     * Refer: BlindOracle.blindOracle() and LeastRecentlyUsed.leastRecentlyUsed()
      * 
      * @param k                   Cache Size
      * @param pageRequestSequence Sequence of page requests made
