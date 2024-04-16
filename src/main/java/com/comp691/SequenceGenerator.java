@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-class SequenceGenerator {
+public class SequenceGenerator {
     /**
      * This function generates a random sequence of page requests by taking the
      * cache size (k), large/global memory (N), number of requests to be made (n)
@@ -201,7 +201,7 @@ class SequenceGenerator {
             }
         }
 
-        System.out.println("Prediction error: " + predictionError);
+        // System.out.println("Prediction error: " + predictionError);
         return r_predictedHSequence;
     }
 
