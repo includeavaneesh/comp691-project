@@ -61,7 +61,7 @@ public class AlgorithmAnalysis {
         return new int[] { optPageFaults, boPageFaults, lruPageFaults, caPageFaults };
     }
 
-    private double[] batchTest(int k, int N, double e, double tau, int w) {
+    private double[] batchTest(int k, int N, double e, double tau, int w, double thr) {
         int n = 10_000;
 
         double avg_optPageFaults = 0;
@@ -71,7 +71,7 @@ public class AlgorithmAnalysis {
 
         for (int iteration = 1; iteration <= 100; iteration++) {
             int[] result = new int[4];
-            result = trial(k, N, n, e, tau, w, 0.4);
+            result = trial(k, N, n, e, tau, w, thr);
 
             avg_optPageFaults += result[0];
             avg_boPageFaults += result[1];
@@ -88,32 +88,74 @@ public class AlgorithmAnalysis {
 
     }
 
-    public void k_DependencyTest() throws IOException, PythonExecutionException {
-        // N = 5k
-        // int[] k = new int[] { 3, 5, 7, 10, 15, 20, 25 };
-        List<Double> opt = new ArrayList<Double>();
-        List<Double> bo = new ArrayList<Double>();
-        List<Double> lru = new ArrayList<Double>();
-        List<Double> ca = new ArrayList<Double>();
+    public void k_DependencyTest(double e, double tau, int w, double thr ,String figureName)
+            throws IOException, PythonExecutionException {
+
+        List<Double> OPT = new ArrayList<Double>();
+        List<Double> BlindOracle = new ArrayList<Double>();
+        List<Double> LeastRecentlyUsed = new ArrayList<Double>();
+        List<Double> CombinedAlgorithm = new ArrayList<Double>();
         List<Integer> kList = new ArrayList<Integer>();
-        for (int k = 3; k <= 25; k++) {
+        for (int k = 1; k <= 25; k++) {
             int N = 5 * k;
-            double[] results = batchTest(k, N, 0.5, 0.5, 10);
-            opt.add(results[0]);
-            bo.add(results[1]);
-            lru.add(results[2]);
-            ca.add(results[3]);
+            double[] results = batchTest(k, N, e, tau, w, thr);
+            OPT.add(results[0]);
+            BlindOracle.add(results[1]);
+            LeastRecentlyUsed.add(results[2]);
+            CombinedAlgorithm.add(results[3]);
             kList.add(k);
 
         }
 
         Plot plt = Plot.create();
-        plt.plot().add(kList, opt).label("opt");
-        plt.plot().add(kList, bo).label("bo");
-        plt.plot().add(kList, lru).label("lru");
-        plt.plot().add(kList, ca).label("ca");
+        plt.title(figureName);
+        plt.ylabel("Page Faults");
+        plt.xlabel("Cache Size");
+
+        plt.plot().add(kList, OPT).label("OPT");
+        plt.plot().add(kList, BlindOracle).label("Blind Oracle");
+        plt.plot().add(kList, LeastRecentlyUsed).label("Least Recently Used");
+        plt.plot().add(kList, CombinedAlgorithm).label("Combined Algorithm");
         plt.legend().loc("upper right");
-        plt.show();
+        plt.savefig("./src/main/resources/results/" + figureName + ".png").dpi(1000);
+        plt.executeSilently();
+
     }
+
+    public void w_DependencyTest(double e, double tau, int k, double thr, String figureName)
+            throws IOException, PythonExecutionException {
+        List<Double> OPT = new ArrayList<Double>();
+        List<Double> BlindOracle = new ArrayList<Double>();
+        List<Double> LeastRecentlyUsed = new ArrayList<Double>();
+        List<Double> CombinedAlgorithm = new ArrayList<Double>();
+        List<Integer> wList = new ArrayList<Integer>();
+
+        int N = 200;
+        for (int w = 5; w <= 100; w = w + 5) {
+
+            double[] results = batchTest(k, N, e, tau, w, thr);
+            OPT.add(results[0]);
+            BlindOracle.add(results[1]);
+            LeastRecentlyUsed.add(results[2]);
+            CombinedAlgorithm.add(results[3]);
+            wList.add(w);
+
+        }
+
+        Plot plt = Plot.create();
+        plt.title(figureName);
+        plt.ylabel("Page Faults");
+        plt.xlabel("W");
+
+        plt.plot().add(wList, OPT).label("OPT");
+        plt.plot().add(wList, BlindOracle).label("Blind Oracle");
+        plt.plot().add(wList, LeastRecentlyUsed).label("Least Recently Used");
+        plt.plot().add(wList, CombinedAlgorithm).label("Combined Algorithm");
+        plt.legend().loc("upper right");
+        plt.savefig("./src/main/resources/results/" + figureName + ".png").dpi(1000);
+        plt.executeSilently();
+    }
+
+    
 
 }
