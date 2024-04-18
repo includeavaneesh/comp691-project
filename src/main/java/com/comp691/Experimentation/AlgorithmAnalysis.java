@@ -88,7 +88,7 @@ public class AlgorithmAnalysis {
 
     }
 
-    public void k_DependencyTest(double e, double tau, int w, double thr ,String figureName)
+    public void k_DependencyTest(double e, double tau, int w, double thr, String figureName)
             throws IOException, PythonExecutionException {
 
         List<Double> OPT = new ArrayList<Double>();
@@ -156,6 +156,73 @@ public class AlgorithmAnalysis {
         plt.executeSilently();
     }
 
-    
+    public void e_DependencyTest(int w, double tau, int k, double thr, String figureName)
+            throws IOException, PythonExecutionException {
+        List<Double> OPT = new ArrayList<Double>();
+        List<Double> BlindOracle = new ArrayList<Double>();
+        List<Double> LeastRecentlyUsed = new ArrayList<Double>();
+        List<Double> CombinedAlgorithm = new ArrayList<Double>();
+        List<Double> eList = new ArrayList<Double>();
+
+        int N = 50;
+        for (double e = 0.1; e < 1; e = e + 0.1) {
+
+            double[] results = batchTest(k, N, e, tau, w, thr);
+            OPT.add(results[0]);
+            BlindOracle.add(results[1]);
+            LeastRecentlyUsed.add(results[2]);
+            CombinedAlgorithm.add(results[3]);
+            eList.add(e);
+
+        }
+
+        Plot plt = Plot.create();
+        plt.title(figureName);
+        plt.ylabel("Page Faults");
+        plt.xlabel("e");
+
+        plt.plot().add(eList, OPT).label("OPT");
+        plt.plot().add(eList, BlindOracle).label("Blind Oracle");
+        plt.plot().add(eList, LeastRecentlyUsed).label("Least Recently Used");
+        plt.plot().add(eList, CombinedAlgorithm).label("Combined Algorithm");
+        plt.legend().loc("upper right");
+        plt.savefig("./src/main/resources/results/" + figureName + ".png").dpi(1000);
+        plt.executeSilently();
+    }
+
+    public void tau_DependencyTest(double e, int k, int w, double thr, String figureName)
+            throws IOException, PythonExecutionException {
+
+        List<Double> OPT = new ArrayList<Double>();
+        List<Double> BlindOracle = new ArrayList<Double>();
+        List<Double> LeastRecentlyUsed = new ArrayList<Double>();
+        List<Double> CombinedAlgorithm = new ArrayList<Double>();
+        int N = 50;
+        List<Double> tauList = new ArrayList<Double>();
+        for (double tau = 0.1; tau < 1; tau += 0.1) {
+
+            double[] results = batchTest(k, N, e, tau, w, thr);
+            OPT.add(results[0]);
+            BlindOracle.add(results[1]);
+            LeastRecentlyUsed.add(results[2]);
+            CombinedAlgorithm.add(results[3]);
+            tauList.add(tau);
+
+        }
+
+        Plot plt = Plot.create();
+        plt.title(figureName);
+        plt.ylabel("Page Faults");
+        plt.xlabel("Tau");
+
+        plt.plot().add(tauList, OPT).label("OPT");
+        plt.plot().add(tauList, BlindOracle).label("Blind Oracle");
+        plt.plot().add(tauList, LeastRecentlyUsed).label("Least Recently Used");
+        plt.plot().add(tauList, CombinedAlgorithm).label("Combined Algorithm");
+        plt.legend().loc("upper right");
+        plt.savefig("./src/main/resources/results/" + figureName + ".png").dpi(1000);
+        plt.executeSilently();
+
+    }
 
 }
