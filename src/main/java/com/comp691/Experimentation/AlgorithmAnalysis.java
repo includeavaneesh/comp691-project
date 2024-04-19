@@ -1,5 +1,17 @@
 package com.comp691.Experimentation;
 
+/**
+ * This code belongs to
+ * Student name: Avaneesh Kanshi
+ * Student Id: 40273760
+ * 
+ * Dept. of Computer Science and Software Engineering
+ * Concordia University
+ * 
+ * This is the code for Phase 3 of the project component of COMP 691: Online Algorithms and Competitive Analysis
+ * Winter 2024
+ */
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,14 +40,14 @@ import com.github.sh0nk.matplotlib4j.PythonExecutionException;
 public class AlgorithmAnalysis {
 
     /**
+     * This is a single trial test
      * 
-     * @param k
-     * @param N
-     * @param n
-     * @param e
-     * @param tau
-     * @param w
-     * @param thr
+     * @param k   Local cache size
+     * @param N   Global memory size
+     * @param e   Noise parameter
+     * @param tau Noise parameter
+     * @param w   Noise parameter
+     * @param thr Combined algorithm threshold
      */
     private int[] trial(int k, int N, int n, double e, double tau, int w, double thr) {
         List<Integer> pageSequence = SequenceGenerator.generateRandomSequence(k, N, n, e);
@@ -58,9 +70,21 @@ public class AlgorithmAnalysis {
         CombinedAlgorithm testObjectCA = new CombinedAlgorithm();
         int caPageFaults = testObjectCA.combinedAlg(k, pageSequence, predictedhSeq, thr);
 
+        // Return the number of page faults
         return new int[] { optPageFaults, boPageFaults, lruPageFaults, caPageFaults };
     }
 
+    /**
+     * This is a batch test consisiting of 100 iterations
+     * 
+     * @param k   Local cache size
+     * @param N   Global memory size
+     * @param e   Noise parameter
+     * @param tau Noise parameter
+     * @param w   Noise parameter
+     * @param thr Combined algorithm threshold
+     * @return Average number of page faults per algorithm
+     */
     private double[] batchTest(int k, int N, double e, double tau, int w, double thr) {
         int n = 10_000;
 
@@ -107,6 +131,7 @@ public class AlgorithmAnalysis {
 
         }
 
+        // Generates plot
         Plot plt = Plot.create();
         plt.title(figureName);
         plt.ylabel("Page Faults");
@@ -142,6 +167,7 @@ public class AlgorithmAnalysis {
 
         }
 
+        // Generates plot
         Plot plt = Plot.create();
         plt.title(figureName);
         plt.ylabel("Page Faults");
@@ -176,6 +202,7 @@ public class AlgorithmAnalysis {
 
         }
 
+        // Generates plot
         Plot plt = Plot.create();
         plt.title(figureName);
         plt.ylabel("Page Faults");
@@ -210,6 +237,7 @@ public class AlgorithmAnalysis {
 
         }
 
+        // Generates plot
         Plot plt = Plot.create();
         plt.title(figureName);
         plt.ylabel("Page Faults");
